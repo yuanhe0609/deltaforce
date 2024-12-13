@@ -34,19 +34,19 @@ public class LoginInterceptor implements HandlerInterceptor {
         tokenMap.put("Access-Token",accessToken);
         tokenMap.put("Refresh-Token",refreshToken);
         if (accessToken == null && refreshToken == null) {
-            returnJson(response,new Result().error("Token校验没通过").toJson());
+            returnJson(response,new Result().error("Token为空").toJson());
             return false;
         }
         Result tokenVerifyIfo = JWTUtil.checkToken(tokenMap);
         if(tokenVerifyIfo.getCode() == 500){
-            returnJson(response,new Result().error("Token校验没通过").toJson());
+            returnJson(response,new Result().error(tokenVerifyIfo.getMsg()).toJson());
             return false;
         }
         Map<String,String> data = (Map<String, String>) tokenVerifyIfo.getData();
         String username = data.get("username");
         User user = userMapper.selectUserByUsername(username);
         if (user == null) {
-            returnJson(response,new Result().error("hello").toJson());
+            returnJson(response,new Result().error("无对应用户").toJson());
             return false;
         }
         return true;

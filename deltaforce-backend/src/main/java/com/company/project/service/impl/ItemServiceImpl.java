@@ -4,6 +4,8 @@ import com.company.project.entity.Result;
 import com.company.project.mapper.ItemMapper;
 import com.company.project.service.IItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +15,10 @@ public class ItemServiceImpl implements IItemService {
 
     @Autowired
     private ItemMapper itemMapper;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+
 
     @Override
     public Result getItems() {
