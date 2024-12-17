@@ -11,4 +11,8 @@ public interface ItemMapper {
     List<Item> selectAllItems();
 
     Item selectItemById(Integer id);
+
+    Integer insertItem(Item item);
+
+    Integer insertItem(List<Item> item);
 }

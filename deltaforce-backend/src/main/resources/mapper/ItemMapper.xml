@@ -8,4 +8,8 @@
     <select id="selectItemById" resultType="com.company.project.entity.Item">
         select * from t_item where id = #{id}
     </select>
+    <insert id="insertItem" keyProperty="id" useGeneratedKeys="true">
+        insert into t_item (item_name,item_quality,item_price,item_source,item_img_url,item_description)
+            values (#{name},#{quality},#{price},#{source},#{img},#{desc})
+    </insert>
 </mapper>
