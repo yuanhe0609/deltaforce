@@ -6,7 +6,7 @@
         <el-radio-button :value="true" @click="handleClose">隐藏</el-radio-button>
       </el-radio-group>
     </el-col>
-    <el-col :span=4 style="display: flex;justify-content: center;align-items: center;"><el-avatar :src="logoUrl"></el-avatar></el-col>
+    <el-col :span=4 style="display: flex;justify-content: center;align-items: center;"><el-avatar src="../../../public/logo.png"></el-avatar></el-col>
     <el-col :span=10 style="display: flex;justify-content: right;align-items: center;">
       <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"/>
     </el-col>
@@ -71,35 +71,18 @@
 </template>
 
 <script setup>
-import logoUrl from "../../../public/logo.png"
 import { ref } from 'vue'
-import axios from "axios";
-import ItemList from "@/view/itemList/ItemList.vue";
-import {Search} from "@element-plus/icons-vue";
-const count = ref(0)
-const load = () => {
-  count.value += 5
-}
+import ItemList from "@/view/mainHome/itemList/ItemList.vue";
 const leftSpan = ref(3)
 const rightSpan = ref(21)
 const isCollapse = ref(false)
 const handleOpen = () => {
-  getData()
   leftSpan.value = 3
   rightSpan.value = 21
 }
 const handleClose = () => {
   leftSpan.value = 1
   rightSpan.value = 23
-}
-
-function getData(){
-  axios.get("http://localhost:8000/login").then(res=>{
-    console.log(res)
-  })
-}
-function handleMouseEnter(){
-  console.log("asd")
 }
 </script>
 
