@@ -10,6 +10,10 @@ public class Item {
     private Integer quality;
     private String desc;
     private Float price;
-    private String img;
+    private String imgUrl;
     private String source;
+    private String size;
+    private Integer row;
+    private Integer col;
+    private String qualityImgUrl;
 }

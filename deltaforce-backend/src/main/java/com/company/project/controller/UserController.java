@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.company.project.entity.User;
 import com.company.project.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +20,8 @@ public class UserController {
     }
 
     @RequestMapping("/login")
-    public String login(User user){
+    public String login(@RequestBody User user){
+        System.out.println(user);
         return userService.login(user).toJsonString();
     }
 }

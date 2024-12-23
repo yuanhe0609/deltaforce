@@ -49,6 +49,9 @@ public class LoginInterceptor implements HandlerInterceptor {
             returnJson(response,new Result().error("无对应用户").toJson());
             return false;
         }
+        if(((Map<String, String>) tokenVerifyIfo.getData()).get("Access-Token") != accessToken && ((Map<String, String>) tokenVerifyIfo.getData()).get("Access-Token") != null){
+            returnJson(response,new Result().updateCookie(tokenVerifyIfo.getData(),"更新Access-Token").toJson());
+        }
         return true;
     }
 

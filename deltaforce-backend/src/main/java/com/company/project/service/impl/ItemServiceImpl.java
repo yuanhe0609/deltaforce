@@ -18,7 +18,13 @@ public class ItemServiceImpl implements IItemService {
     private RedisTemplate redisTemplate;
     @Override
     public Result getItems() {
-        return new Result().success(itemMapper.selectAllItems(),"成功获取物品信息");
+        List<Item> itemList = itemMapper.selectAllItems();
+        for(Item item : itemList){
+            String[] rowAndCol = item.getSize().split("\\*");
+            item.setRow(Integer.valueOf(rowAndCol[0]));
+            item.setCol(Integer.valueOf(rowAndCol[1]));
+        }
+        return new Result().success(itemList,"成功获取物品信息");
     }
 
     @Override

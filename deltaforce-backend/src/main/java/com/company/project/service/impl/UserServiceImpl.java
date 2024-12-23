@@ -51,12 +51,14 @@ public class UserServiceImpl implements IUserService {
             if (md5Util.verify(user.getPassword(),nowUser.getPassword())) {
                 String AccessToken = JWTUtil.createToken(user.getUsername(),3600000L);
                 String RefreshToken = JWTUtil.createToken(user.getUsername(),2592000000L);
-                Map<String,String> map = new HashMap<>();
+                Map<String,Object> map = new HashMap<>();
                 map.put("AccessToken",AccessToken);
                 map.put("RefreshToken",RefreshToken);
+                map.put("uid",nowUser.getId());
+                System.out.println(user);
                 return new Result().success(map,"登录成功");
              }
         }
-        return new Result().error("登录失败");
+        return new Result().error("用户名或密码不正确");
     }
 }

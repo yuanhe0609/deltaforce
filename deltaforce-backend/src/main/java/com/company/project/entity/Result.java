@@ -32,10 +32,24 @@ public class Result<T>  {
         return result;
     }
 
-    public <T> Result error(String msg,T object) {
+    public <T> Result error(T object,String msg) {
         Result result = new Result();
         result.msg = msg;
         result.code = 500;
+        result.data = object;
+        return result;
+    }
+    public <T> Result updateCookie(String msg) {
+        Result result = new Result();
+        result.msg = msg;
+        result.code = 300;
+        return result;
+    }
+
+    public <T> Result updateCookie(T object,String msg) {
+        Result result = new Result();
+        result.msg = msg;
+        result.code = 300;
         result.data = object;
         return result;
     }
