@@ -1,28 +1,18 @@
 <template>
-  <el-row :gutter="0" style="background-image: url('../../../public/bg_01.jpg');background-size:100% 100%;">
-    <el-col :span="16">
-
-    </el-col>
+  <el-row :gutter="0">
+    <el-col :span="16"></el-col>
     <el-col :span="8" style="display: flex;align-items: center;">
       <div class="wrapper">
-        <form>
-          <h1>登录</h1>
+        <form action="#">
+          <h1>找回密码</h1>
           <div class="input-box">
             <i class="fas fa-envelope icon"></i>
             <input id="usernameInput" v-model="username" required />
             <label>Username</label>
           </div>
-          <div class="input-box">
-            <i class="fas fa-lock icon"></i>
-            <input id="passwordInput" v-model="password" required />
-            <label>Password</label>
-          </div>
+          <button @click="retrieve" class="btn">找回</button>
           <div class="signup-link">
-            <a href="#/retrieve">Forgot password?</a>
-          </div>
-          <el-button type="success" @click="login" plain class="btn">登录</el-button>
-          <div class="signup-link">
-            <p>Don't have an account? <a href="#/register">Create one.</a></p>
+            <p>Do you remember account? <a href="#">return.</a></p>
           </div>
         </form>
       </div>
@@ -30,29 +20,15 @@
   </el-row>
 </template>
 
-<script  setup>
-  import { ref } from 'vue'
-  import axios from "axios";
-  import router from "@/router/index.js";
-  import {updateCookie} from "@/assets/cookie.js";
 
-  const username = ref('')
-  const password = ref('')
+<script setup>
+import {ref} from "vue";
 
-  function forgotPassword(){
+const username = ref('')
+const password = ref('')
+function retrieve(){
 
-  }
-
-  function login(){
-    axios.post("http://7fc50b04.r1.cpolar.top/login",{username:username.value,password:password.value}).then(res=>{
-      if(res.data.code === 200){
-        updateCookie(res)
-        router.push('/main')
-      }else{
-        alert(res.data.msg)
-      }
-    })
-  }
+}
 </script>
 <style scoped>
 * {
@@ -200,4 +176,6 @@
     z-index: -90;
   }
 }
+
+
 </style>

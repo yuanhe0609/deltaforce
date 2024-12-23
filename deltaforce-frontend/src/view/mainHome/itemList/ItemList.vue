@@ -1,87 +1,42 @@
 <template>
-  <ul v-infinite-scroll="load" class="infinite-list" style="overflow: auto;height: 100%;">
-    <div v-for="i in count" :key="i" @click="click(i)" class="item-div">
-      <el-descriptions title="" border :column=4>
-        <el-descriptions-item
-            :rowspan="2"
-            :width="150"
-            label="图片"
-            align="center"
-        >
+  <ul  class="infinite-list" style="overflow: auto;height: 100%;">
+    <div v-if="itemFlag == 'weapon'">
+
+    </div>
+    <div v-for="data in itemData" :key="data"  class="item-div">
+      <el-row :gutter="0">
+        <el-col :span="6" style="display: flex;justify-content: center;align-items: center;">
           <el-image
-              style="width: 142px; height: 142px"
-              src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+            style="width: 150px; height: 150px"
+            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
           />
-        </el-descriptions-item>
-        <el-descriptions-item label="品质" align="center">
-          <el-tag size="small" type="danger">
-          </el-tag>
-        </el-descriptions-item>
-        <el-descriptions-item label="名称" align="center">火箭燃料</el-descriptions-item>
-        <el-descriptions-item label="价格" align="center">1500000</el-descriptions-item>
-        <el-descriptions-item label="尺寸" align="center">3*4</el-descriptions-item>
-        <el-descriptions-item label="单格价格" align="center">125000</el-descriptions-item>
-        <el-descriptions-item label="来源" align="center">航天基地</el-descriptions-item>
-      </el-descriptions>
+        </el-col>
+        <el-col :span="18">
+          <el-descriptions
+              class="margin-top"
+              :column="3"
+              border
+          >
+            <el-descriptions-item label="名称" align="center" width="120">{{data.name}}</el-descriptions-item>
+            <el-descriptions-item label="价格" align="center" width="120">{{data.price}}</el-descriptions-item>
+            <el-descriptions-item label="尺寸" align="center" width="120">{{data.size}}</el-descriptions-item>
+            <el-descriptions-item label="单格价格" align="center" width="120">{{(data.price/(data.row*data.col)).toFixed(2)}}</el-descriptions-item>
+            <el-descriptions-item label="来源" align="center" width="240">{{data.source}}</el-descriptions-item>
+          </el-descriptions>
+        </el-col>
+      </el-row>
     </div>
   </ul>
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue'
-import axios from "axios";
-const count = ref(0)
-const itemData = ref([])
-const accessToken = ref('')
-const refreshToken = ref('')
-
-const load = () => {
-  count.value += 5
-}
-function click(i){
-  console.log("-------------"+i+"----s---------")
-}
-function getItemList(){
-
-  const cookieArr = document.cookie.split(";");
-  cookieArr.forEach(item=>{
-    const cookiePair = item.trim().split("=");
-    if("Access-Token" === cookiePair[0]){
-      accessToken.value = cookiePair[1]
-    }
-    if("Refresh-Token" === cookiePair[0]){
-      refreshToken.value = cookiePair[1]
-    }
-  })
-  axios.get("http://7fc50b04.r1.cpolar.top/get_item", {headers:{"Access-Token":accessToken.value,"Refresh-Token":refreshToken.value}}).then(res=>{
-    if(res.data.code === 300){
-      updateCookie(res)
-      axios.get("http://7fc50b04.r1.cpolar.top/get_item", {headers:{"Access-Token":accessToken.value,"Refresh-Token":refreshToken.value}}).then(res=>{
-        itemData.value = res.data.data;
-      })
-    }else if(res.data.code === 200){
-      itemData.value = res.data.data;
-    }else{
-      //TODO 调用错误后，需执行的操作
-    }
-  })
-}
-function updateCookie(res){
-  const expairdate = new Date();
-  expairdate.setTime(expairdate.getTime() + (24*60*60*1000));
-  accessToken.value = res.data.data.AccessToken
-  refreshToken.value = res.data.data.RefreshToken
-  document.cookie = "Access-Token="+accessToken.value+"; expires="+expairdate.toUTCString()
-  document.cookie = "Refresh-Token="+refreshToken.value+"; expires="+expairdate.toUTCString()
-}
-function deleteCookie(){
-  document.cookie = "Access-Token=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-  document.cookie = "Refresh-Token=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-}
-onMounted(()=>{
-  getItemList()
+import { toRefs, defineProps } from 'vue'
+const props = defineProps({
+  //子组件接收父组件传递过来的值
+  itemData: String,
 })
-
+//使用父组件传递过来的值
+const {itemData} =toRefs(props)
 </script>
 
 

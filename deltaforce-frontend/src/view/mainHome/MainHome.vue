@@ -1,23 +1,13 @@
 <template>
-  <el-row :gutter=0 style="height: 50px">
-    <el-col :span=10 style="display: flex;align-items: center;">
-      <el-radio-group v-model="isCollapse">
-        <el-radio-button :value="false" @click="handleOpen">展开</el-radio-button>
-        <el-radio-button :value="true" @click="handleClose">隐藏</el-radio-button>
-      </el-radio-group>
-    </el-col>
-    <el-col :span=4 style="display: flex;justify-content: center;align-items: center;"><el-avatar src="../../../public/logo.png"></el-avatar></el-col>
-    <el-col :span=10 style="display: flex;justify-content: right;align-items: center;">
-      <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"/>
-    </el-col>
-  </el-row>
+  <Header/>
   <el-divider style="border: 1px;margin: 1px;background-color: cornflowerblue"/>
-    <el-row :gutter="0">
+  <el-row :gutter="0" style="height: 90%">
       <el-col :span=leftSpan style="height: 100%;padding-top: 0;padding-right: 0;">
         <el-menu
             default-active="2"
             class="el-menu-vertical-demo"
             :collapse="isCollapse"
+            style="overflow: scroll;overflow-x: hidden"
         >
           <el-sub-menu index="1">
             <template #title>
@@ -25,26 +15,26 @@
               <span>物品</span>
             </template>
 
-            <el-menu-item index="1-1">
+            <el-menu-item index="1-1" @click="setItemFlag('weapon')">
               <el-icon><img src="../../../public/weapon.png" class="icon" alt=""></el-icon>武器
             </el-menu-item>
-            <el-menu-item index="1-2">
+            <el-menu-item index="1-2" @click="setItemFlag('armor')">
               <el-icon><img src="../../../public/armor.png" class="icon" alt=""></el-icon>装备
             </el-menu-item>
-            <el-menu-item index="1-3">
+            <el-menu-item index="1-3" @click="setItemFlag('accessory')">
               <el-icon><img src="../../../public/accessory.png" class="icon" alt=""></el-icon>配件
             </el-menu-item>
-            <el-menu-item index="1-4">
+            <el-menu-item index="1-4" @click="setItemFlag('bullet')">
               <el-icon><img src="../../../public/bullet.png" class="icon" alt=""></el-icon>弹药
             </el-menu-item>
-            <el-menu-item index="1-5">
+            <el-menu-item index="1-5" @click="setItemFlag('medicine')">
               <el-icon><img src="../../../public/medicine.png" class="icon" alt=""></el-icon>药品
             </el-menu-item>
-            <el-menu-item index="1-6">
+            <el-menu-item index="1-6" @click="setItemFlag('material')">
               <el-icon><img src="../../../public/material.png" class="icon" alt=""></el-icon>材料
             </el-menu-item>
-            <el-menu-item index="1-7">
-              <el-icon><img src="../../../public/keycard.png" class="icon" alt=""></el-icon>钥匙卡
+            <el-menu-item index="1-7" @click="setItemFlag('keyCard')">
+              <el-icon><img src="../../../public/keyCard.png" class="icon" alt=""></el-icon>钥匙卡
             </el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="2">
@@ -64,26 +54,57 @@
         </el-menu>
       </el-col>
       <el-col :span=rightSpan style="height: 100%;padding: 0;">
-        <ItemList></ItemList>
+        <div v-if="itemFlag === 'material'">
+          <ItemList :itemData="itemData"></ItemList>
+        </div>
+
       </el-col>
     </el-row>
-
+  <el-divider style="border: 1px;margin: 1px;background-color: cornflowerblue"/>
+  <Footer/>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import {onMounted, ref} from 'vue'
 import ItemList from "@/view/mainHome/itemList/ItemList.vue";
+import Header from "/src/components/header/Header.vue"
+import Footer from "/src/components/footer/Footer.vue"
+import axios from "axios";
+import getCookie, {updateCookie} from "@/assets/cookie.js";
 const leftSpan = ref(3)
 const rightSpan = ref(21)
 const isCollapse = ref(false)
-const handleOpen = () => {
-  leftSpan.value = 3
-  rightSpan.value = 21
+const itemData = ref([])
+const accessToken = ref('')
+const refreshToken = ref('')
+const itemFlag = ref('')
+function setItemFlag(flag){
+    itemFlag.value = flag
+  console.log(itemFlag.value)
 }
-const handleClose = () => {
-  leftSpan.value = 1
-  rightSpan.value = 23
+function getItemList(){
+  accessToken.value = getCookie()[0].value
+  refreshToken.value = getCookie()[1].value
+  console.log(accessToken.value)
+  console.log(refreshToken.value)
+  axios.get("http://7fc50b04.r1.cpolar.top/get_item", {headers:{"Access-Token":accessToken.value,"Refresh-Token":refreshToken.value}}).then(res=>{
+    if(res.data.code === 300){
+      updateCookie(res)
+      axios.get("http://7fc50b04.r1.cpolar.top/get_item", {headers:{"Access-Token":accessToken.value,"Refresh-Token":refreshToken.value}}).then(res=>{
+        itemData.value = res.data.data
+        console.log(itemData.value)
+      })
+    }else if(res.data.code === 200){
+      itemData.value = res.data.data
+      console.log(itemData.value)
+    }else{
+      //TODO 调用错误后，需执行的操作
+    }
+  })
 }
+onMounted(()=>{
+  getItemList()
+})
 </script>
 
 <style>
