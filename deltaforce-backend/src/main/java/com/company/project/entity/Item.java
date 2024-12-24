@@ -16,4 +16,5 @@ public class Item {
     private Integer row;
     private Integer col;
     private String qualityImgUrl;
+    private String type;
 }
