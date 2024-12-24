@@ -54,9 +54,13 @@
         </el-menu>
       </el-col>
       <el-col :span=rightSpan style="height: 100%;padding: 0;">
-        <div v-if="itemFlag === 'material'">
-          <ItemList :itemData="itemData"></ItemList>
-        </div>
+        <WeaponList v-if="itemFlag === 'weapon'" :itemData=weaponData></WeaponList>
+<!--        <ItemList v-if="itemFlag === 'armor'" :itemData=armorData></ItemList>-->
+<!--        <ItemList v-if="itemFlag === 'accessory'" :itemData=accessoryData></ItemList>-->
+<!--        <ItemList v-if="itemFlag === 'bullet'" :itemData=bulletData></ItemList>-->
+<!--        <ItemList v-if="itemFlag === 'medicine'" :itemData=medicineData></ItemList>-->
+        <MaterialList v-if="itemFlag === 'material'" :itemData=materialData></MaterialList>
+<!--        <ItemList v-if="itemFlag === 'keyCard'" :itemData=keyCardData></ItemList>-->
 
       </el-col>
     </el-row>
@@ -66,7 +70,8 @@
 
 <script setup>
 import {onMounted, ref} from 'vue'
-import ItemList from "@/view/mainHome/itemList/ItemList.vue";
+import MaterialList from "@/view/mainHome/materialList/MaterialList.vue";
+import WeaponList from "@/view/mainHome/weaponList/WeaponList.vue";
 import Header from "/src/components/header/Header.vue"
 import Footer from "/src/components/footer/Footer.vue"
 import axios from "axios";
@@ -74,13 +79,19 @@ import getCookie, {updateCookie} from "@/assets/cookie.js";
 const leftSpan = ref(3)
 const rightSpan = ref(21)
 const isCollapse = ref(false)
-const itemData = ref([])
+const weaponData = ref([])
+const armorData = ref([])
+const accessoryData = ref([])
+const bulletData = ref([])
+const medicineData = ref([])
+const materialData = ref([])
+const keyCardData = ref([])
+
 const accessToken = ref('')
 const refreshToken = ref('')
-const itemFlag = ref('')
+const itemFlag = ref(' ')
 function setItemFlag(flag){
-    itemFlag.value = flag
-  console.log(itemFlag.value)
+  itemFlag.value = flag
 }
 function getItemList(){
   accessToken.value = getCookie()[0].value
@@ -91,12 +102,26 @@ function getItemList(){
     if(res.data.code === 300){
       updateCookie(res)
       axios.get("http://7fc50b04.r1.cpolar.top/get_item", {headers:{"Access-Token":accessToken.value,"Refresh-Token":refreshToken.value}}).then(res=>{
-        itemData.value = res.data.data
-        console.log(itemData.value)
+        weaponData.value = res.data.data.weapon
+        armorData.value = res.data.data.armor
+        accessoryData.value = res.data.data.accessory
+        bulletData.value = res.data.data.bullet
+        medicineData.value = res.data.data.medicine
+        materialData.value = res.data.data.material
+        keyCardData.value = res.data.data.keyCard
       })
     }else if(res.data.code === 200){
-      itemData.value = res.data.data
-      console.log(itemData.value)
+      console.log(res.data.data)
+      weaponData.value = res.data.data.weapon
+      armorData.value = res.data.data.armor
+      accessoryData.value = res.data.data.accessory
+      bulletData.value = res.data.data.bullet
+      medicineData.value = res.data.data.medicine
+      materialData.value = res.data.data.material
+      keyCardData.value = res.data.data.keyCard
+
+
+
     }else{
       //TODO 调用错误后，需执行的操作
     }

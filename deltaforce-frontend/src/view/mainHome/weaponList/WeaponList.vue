@@ -1,8 +1,5 @@
 <template>
   <ul  class="infinite-list" style="overflow: auto;height: 100%;">
-    <div v-if="itemFlag == 'weapon'">
-
-    </div>
     <div v-for="data in itemData" :key="data"  class="item-div">
       <el-row :gutter="0">
         <el-col :span="6" style="display: flex;justify-content: center;align-items: center;">
@@ -20,8 +17,7 @@
             <el-descriptions-item label="名称" align="center" width="120">{{data.name}}</el-descriptions-item>
             <el-descriptions-item label="价格" align="center" width="120">{{data.price}}</el-descriptions-item>
             <el-descriptions-item label="尺寸" align="center" width="120">{{data.size}}</el-descriptions-item>
-            <el-descriptions-item label="单格价格" align="center" width="120">{{(data.price/(data.row*data.col)).toFixed(2)}}</el-descriptions-item>
-            <el-descriptions-item label="来源" align="center" width="240">{{data.source}}</el-descriptions-item>
+            <el-descriptions-item label="说明" align="center" width="240">{{data.desc}}</el-descriptions-item>
           </el-descriptions>
         </el-col>
       </el-row>
@@ -33,7 +29,7 @@
 import { toRefs, defineProps } from 'vue'
 const props = defineProps({
   //子组件接收父组件传递过来的值
-  itemData: String,
+  itemData: Array,
 })
 //使用父组件传递过来的值
 const {itemData} =toRefs(props)
